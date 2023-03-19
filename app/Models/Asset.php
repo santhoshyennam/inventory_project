@@ -18,6 +18,6 @@ class Asset extends Model
 
     public function person()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Person::class);
     }
 }

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\asset;
+use App\Models\Asset;
+use App\Models\Person;
 
 
 class OwnershipController extends Controller
@@ -17,8 +18,8 @@ class OwnershipController extends Controller
      */
     public function index()
     {
-        $asset = Asset::all();
-        return view('ownership.index', compact('asset'));
+        $assets = Asset::all();
+        return view('ownership.index', compact('assets'));
     }
 
     /**
@@ -26,7 +27,9 @@ class OwnershipController extends Controller
      */
     public function create()
     {
-        return view('ownership.create');
+        $assets = Asset::all();
+        $persons = Person::all();
+        return view('ownership.create',array('assets' => $assets, "persons" => $persons));
     }
 
     /**
@@ -34,15 +37,21 @@ class OwnershipController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'required|max:255',
-            'value' => 'numeric',
-            'purchased' => 'date',
-        ]);
-        $item = Asset::create($validated);
-        
-        return redirect('/owner')->with('success', 'owner is assigned to the asset');
+
+        try {
+            $validated = $request->validate([
+                'person_id' => 'required',
+                'id' => 'required'
+            ]);
+            $new_ownership = Asset::whereId($request->input('id'))->update([ 'person_id' => $request->input('person_id')]);
+            
+            return redirect('/owner')->with('ownership_created', $new_ownership);
+            
+        }
+        catch( Exception $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        }
+       
     }
 
     /**
@@ -50,7 +59,7 @@ class OwnershipController extends Controller
      */
     public function show(string $asset_id)
     {
-        $ownership = Asset::find($asset_id);
+        $ownership = Asset::with('person')->findOrFail($asset_id);
         return view('ownership.show', array('ownership' => $ownership));
     }
 
@@ -59,9 +68,9 @@ class OwnershipController extends Controller
      */
     public function edit(string $asset_id)
     {
-        $ownership = Asset::findOrFail($asset_id);
-        return view('ownership.edit', compact('ownership'));
-        
+        $ownership = Asset::with('person')->findOrFail($asset_id);
+        $persons = Person::all();
+        return view('ownership.edit',array('asset' => $ownership, "persons" => $persons));
     }
 
     /**
@@ -69,15 +78,18 @@ class OwnershipController extends Controller
      */
     public function update(Request $request, string $asset_id)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'required|max:255',
-            'value' => 'numeric',
-            'purchased' => 'date',
-        ]);
-        Asset::whereId($asset_id)->update($validated);
-        
-        return redirect('/owner')->with('success', 'ownership is updated');
+
+        try {
+                $validated = $request->validate([
+                    'person_id' => 'required',
+                ]);
+                $updated_ownership = Asset::whereId($asset_id)->update($validated);
+                return redirect('/owner')->with('ownership_updated',$validated);
+            }
+            catch( Exception $e) {
+                return redirect()->back()->withErrors($e->errors())->withInput();
+            }
+      
     }
 
     /**
@@ -85,9 +97,7 @@ class OwnershipController extends Controller
      */
     public function destroy(string $asset_id)
     {
-        $asset = Asset::findOrFail($asset_id);
-        $asset->delete();
-        
-        return redirect('/owner')->with('success', 'owner for the asset is deleted successfully');
+        $updated_ownership = Asset::whereId($asset_id)->update(['person_id' => NULL]);
+        return redirect('/owner')->with('ownership_deleted',$updated_ownership);
     }
 }
