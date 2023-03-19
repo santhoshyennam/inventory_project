@@ -53,3 +53,51 @@
     h3 {
         color: #4B5563;
     }
+
+    .no-data {
+        color: red;
+        font-style: oblique;
+        font-size: 32px;
+        font-weight: 600;
+      }
+
+      .create_success {
+        color: green;
+        font-style: oblique;
+        font-size: 24px;
+        font-weight: 200;
+      }
+
+      .delete_success {
+        color: red;
+        font-style: oblique;
+        font-size: 24px;
+        font-weight: 200;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .actions, td div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 20px;
+        
+      }
+      .actions a, td div a,td a {
+        color:black;
+      }
+
+      td div a:hover,td a:hover {
+        color: green;
+      }
+      .actions a:hover {
+        font-size: 24px;
+      }
+
+      .actions a {
+        border: 2px solid black;
+        padding:4px;
+        border-radius: 4px;
+      }

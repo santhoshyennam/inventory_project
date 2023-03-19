@@ -34,15 +34,21 @@ class PersonController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => 'required|max:100',
-            'last_name' => 'required|max:100',
-            'date_of_birth' => 'required|date',
-            'email' => 'required',
-        ]);
-        $new_person = Person::create($validated);
-        
-        return redirect('/person')->with('success', 'new person is added!');
+        try {
+            $validated = $request->validate([
+                'first_name' => 'required|max:100',
+                'last_name' => 'required|max:100',
+                'date_of_birth' => 'required|max:10',
+                'email' => 'required|max:50',
+            ]);
+            $new_person = Person::create($validated);
+            
+            return redirect('/person')->with('person_created', $new_person);
+        }
+        catch( Exception $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        }
+      
     }
 
     /**
@@ -50,18 +56,25 @@ class PersonController extends Controller
      */
     public function show(string $person_id)
     {
-        $person = Person::find($person_id);
+        $person = Person::findOrFail($person_id);
         return view('person.show', array('person' => $person));
     }
 
+
+    /*
+    if (!file_exists($file)) {
+        return response('File not found', 404);
+    }
+    useful code for http response to other frontends or backends
+    */
+    
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $person_id)
     {
-        // $person = person::findOrFail($person_id);
-        return view('person.edit');
-        
+        $person = person::findOrFail($person_id);
+        return view('person.edit', compact('person'));     
     }
 
     /**
@@ -69,15 +82,19 @@ class PersonController extends Controller
      */
     public function update(Request $request, string $person_id)
     {
+        try {
         $validated = $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'required|max:255',
-            'value' => 'numeric',
-            'purchased' => 'date',
+            'first_name' => 'required|max:100',
+            'last_name' => 'required|max:100',
+            'date_of_birth' => 'required|max:10',
+            'email' => 'required|max:50',
         ]);
-        Person::whereId($person_id)->update($validated);
-        
-        return redirect('/person')->with('success', 'Person is updated');
+        $updated_person = Person::whereId($person_id)->update($validated);
+        return redirect('/person')->with('person_updated',$validated);
+        }
+        catch( Exception $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        }
     }
 
     /**
@@ -88,6 +105,6 @@ class PersonController extends Controller
         $person = Person::findOrFail($person_id);
         $person->delete();
         
-        return redirect('/person')->with('success', 'Person is deleted from inventory');
+        return redirect('/person')->with('person_deleted', $person);
     }
 }

@@ -6,12 +6,9 @@
         </style>
     </head>
     <body>
-        @if(session()->get('success'))
-            {{ session()->get('success') }}
-        @endif
         <div class="content">
             <h3> <center> Create Person </center> </h3>
-            <form action="{{ route('person.create') }}">
+            <form action="{{ route('person.store') }}" method="POST">
                 @csrf
                 <div class="container">
                   <label for="first name"><b>First name</b></label>
@@ -30,6 +27,15 @@
                 </div>
               </form>
         </div>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li><p style="color:red;">{{ $error }}</p></li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     </body>
 </html>
 

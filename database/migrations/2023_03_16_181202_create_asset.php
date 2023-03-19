@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('asset', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description');
-            $table->string('value');
+            $table->string('name',100);
+            $table->string('description',5000);
+            $table->string('value',50);
             $table->boolean('is_purchased')->default(false);
             $table->timestamps();
         });

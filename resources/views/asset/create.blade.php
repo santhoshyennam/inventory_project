@@ -11,7 +11,7 @@
         @endif
         <div class="content">
             <h3> <center> Create Asset </center> </h3>
-            <form action="{{ route('asset.store') }}">
+            <form action="{{ route('asset.store') }}" method="POST">
                 @csrf
                 <div class="container">
                   <label for="name"><b>Asset Name</b></label>
@@ -27,5 +27,14 @@
                 </div>
               </form>
         </div>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li><p style="color:red;">{{ $error }}</p></li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </body>
 </html>

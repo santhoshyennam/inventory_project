@@ -9,5 +9,15 @@ class Asset extends Model
 {
     use HasFactory;
     protected $table = 'asset';
+    protected $fillable = [
+        'name',
+        'description',
+        'value',
+        'is_purchased'
+    ];
 
+    public function person()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

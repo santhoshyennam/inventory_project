@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\asset;
+use App\Models\Asset;
 
 
 class AssetController extends Controller
@@ -17,8 +17,8 @@ class AssetController extends Controller
      */
     public function index()
     {
-        $asset = Asset::all();
-        return view('asset.index', compact('asset'));
+        $assets = Asset::all();
+        return view('asset.index', compact('assets'));
     }
 
     /**
@@ -34,15 +34,23 @@ class AssetController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'required|max:255',
-            'value' => 'numeric',
-            'purchased' => 'date',
-        ]);
-        $item = Asset::create($validated);
-        
-        return redirect('/asset')->with('success', 'Asset is saved to inventory');
+
+        try {
+            $validated = $request->validate([
+                'name' => 'required|max:100',
+                'description' => 'required|max:255',
+                'value' => 'numeric',
+                'purchased' => 'date',
+            ]);
+            $new_asset = Asset::create($validated);
+            
+            return redirect('/asset')->with('asset_created', $new_asset);
+            
+        }
+        catch( Exception $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        }
+       
     }
 
     /**
@@ -50,7 +58,7 @@ class AssetController extends Controller
      */
     public function show(string $asset_id)
     {
-        $asset = Asset::find($asset_id);
+        $asset = Asset::findOrFail($asset_id);
         return view('asset.show', array('asset' => $asset));
     }
 
@@ -59,10 +67,8 @@ class AssetController extends Controller
      */
     public function edit(string $asset_id)
     {
-        // $asset = Asset::findOrFail($asset_id);
-        // return view('asset.edit', compact('asset'));
-
-        return view('asset.edit');
+        $asset = Asset::findOrFail($asset_id);
+        return view('asset.edit', compact('asset'));   
     }
 
     /**
@@ -70,15 +76,21 @@ class AssetController extends Controller
      */
     public function update(Request $request, string $asset_id)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'required|max:255',
-            'value' => 'numeric',
-            'purchased' => 'date',
-        ]);
-        Asset::whereId($asset_id)->update($validated);
-        
-        return redirect('/asset')->with('success', 'Asset is updated');
+
+        try {
+                $validated = $request->validate([
+                    'name' => 'required|max:100',
+                    'description' => 'required|max:255',
+                    'value' => 'numeric',
+                    'purchased' => 'date',
+                ]);
+                $updated_asset = Asset::whereId($asset_id)->update($validated);
+                return redirect('/asset')->with('asset_updated',$validated);
+            }
+            catch( Exception $e) {
+                return redirect()->back()->withErrors($e->errors())->withInput();
+            }
+      
     }
 
     /**
@@ -89,6 +101,6 @@ class AssetController extends Controller
         $asset = Asset::findOrFail($asset_id);
         $asset->delete();
         
-        return redirect('/asset')->with('success', 'Asset is deleted successfully');
+        return redirect('/asset')->with('asset_deleted',$asset);
     }
 }
