@@ -1,0 +1,23 @@
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+li {
+    float: left;
+}
+
+li a, li div a {
+    display: block;
+    color: #4B5563;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}

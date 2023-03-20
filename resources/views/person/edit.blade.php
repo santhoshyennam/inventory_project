@@ -6,6 +6,7 @@
         </style>
     </head>
     <body>
+        @include('header')
         <div class="content">
             <h3> <center> Edit Person </center> </h3>
             <form action="{{ route('person.update', $person->id) }}" method="POST">

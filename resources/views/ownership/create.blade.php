@@ -6,6 +6,7 @@
         </style>
     </head>
     <body>
+        @include('header')
         @if(session()->get('success'))
             {{ session()->get('success') }}
         @endif

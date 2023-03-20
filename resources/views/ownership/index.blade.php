@@ -6,6 +6,7 @@
         </style>
     </head>
     <body>
+            @include('header')
         @if(session()->get('ownership_deleted'))
         <div class="delete_success"><p> ownership is unassigned!</p></div>
         @endif
@@ -19,7 +20,7 @@
         {{ session()->get('error') }}
         @endif
         <div class="create">
-            <a href="{{ route('owner.create') }}">Assign onwership</a>
+            <a href="{{ route('owner.create') }}">Assign ownership</a>
         </div>
         <div class="content">
             @if(count($assets) > 0)
@@ -29,7 +30,9 @@
                   <th>name</th>
                   <th>Own by</th>
                   <th>Price</th>
+                  @auth
                   <th>actions</th>
+                  @endauth
                 </tr>
                 @foreach($assets as $asset)
                 @if($asset->person_id != NULL)
@@ -37,6 +40,7 @@
                     <td><a href="{{ route('asset.show', $asset->id) }}">{{ $asset->name }}</a></td>
                     <td><a href="{{ route('person.show', $asset->person->id) }}">{{ $asset->person->first_name }}</a></td>
                     <td>{{ $asset->value }}</td>
+                    @auth
                     <td>
                       <div>
                         <a href="{{ route('owner.edit', $asset->id) }}">Edit</a>
@@ -47,6 +51,7 @@
                           </form>
                       </div>
                     </td>
+                    @endauth
                 </tr>
                 @endif
                 @endforeach

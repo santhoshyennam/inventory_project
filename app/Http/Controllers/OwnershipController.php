@@ -10,7 +10,7 @@ use App\Models\Person;
 class OwnershipController extends Controller
 {
     public function __construct(){
-        //$this->middleware('auth', ['except' => 'index', 'show']);
+        $this->middleware('auth', ['except' => 'index', 'show']);
     }
     
     /**
@@ -57,11 +57,11 @@ class OwnershipController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $asset_id)
-    {
-        $ownership = Asset::with('person')->findOrFail($asset_id);
-        return view('ownership.show', array('ownership' => $ownership));
-    }
+    // public function show(string $asset_id)
+    // {
+    //     $ownership = Asset::with('person')->findOrFail($asset_id);
+    //     return view('ownership.show', array('ownership' => $ownership));
+    // }
 
     /**
      * Show the form for editing the specified resource.

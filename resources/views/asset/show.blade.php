@@ -7,6 +7,8 @@
         <title>Asset Number {{ $asset->id }}</title>
     </head>
     <body>
+        @include('header')
+
         <h1>Asset Number {{ $asset->id }}</h1>
         <ul>
             <li>Name: {{ $asset->name }}</li>

@@ -6,6 +6,7 @@
         </style>
     </head>
     <body>
+      @include('header')
       @if(session()->get('person_deleted'))
       <div class="delete_success"><p> person {{ session()->get('person_deleted.first_name') }} is deleted!</p></div>
       @endif
@@ -31,7 +32,9 @@
                 <th>Last name</th>
                 <th>Date of birth</th>
                 <th>Email </th>
+                @auth
                 <th>actions</th>
+                @endauth
               </tr>
               @foreach($persons as $person)
               <tr>
@@ -39,6 +42,7 @@
                   <td>{{ $person->last_name }}</td>
                   <td>{{ $person->date_of_birth }}</td>
                   <td>{{ $person->email }}</td>
+                  @auth
                   <td>
                     <div>
                       <a href="{{ route('person.edit', $person->id) }}">Edit</a>
@@ -49,6 +53,7 @@
                         </form>
                     </div>
                   </td>
+                  @endauth
               </tr>
               @endforeach
             </table>

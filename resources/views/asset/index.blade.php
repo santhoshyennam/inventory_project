@@ -6,6 +6,7 @@
         </style>
     </head>
     <body>
+      @include('header')
         @if(session()->get('asset_deleted'))
         <div class="delete_success"><p> asset {{ session()->get('asset_deleted.name') }} is deleted!</p></div>
         @endif
@@ -18,25 +19,6 @@
         @if(session()->get('error'))
         {{ session()->get('error') }}
         @endif
-         {{-- <table>
-            <tr><td>Name</td><td>Description</td><td>Value</td><td>Date Purchased</td><td>Action</td><td></td></tr>
-            @foreach($asset as $item)
-            <tr>
-                <td><a href="{{ route('asset.show', $item->id) }}">{{ $item->name }}</a></td>
-                <td>{{ $item->description }}</td>
-                <td>{{ $item->value }}</td>
-                <td>{{ $item->purchased }}</td>
-                <td><a href="{{ route('asset.edit', $item->id) }}">Edit</a></td>
-                <td>
-                    <form action="{{ route('asset.destroy', $item->id) }}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type='submit'>Delete</button>         
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </table> --}}
         <div class="create">
             <a href="{{ route('asset.create') }}">Create Asset</a>
         </div>
@@ -48,13 +30,16 @@
                   <th>name</th>
                   <th>Description</th>
                   <th>Value</th>
+                  @auth
                   <th>actions</th>
+                  @endauth
                 </tr>
                 @foreach($assets as $asset)
                 <tr>
-                    <td><a href="{{ route('person.show', $asset->id) }}">{{ $asset->name }}</a></td>
+                    <td><a href="{{ route('asset.show', $asset->id) }}">{{ $asset->name }}</a></td>
                     <td>{{ $asset->description }}</td>
                     <td>{{ $asset->value }}</td>
+                    @auth
                     <td>
                       <div>
                         <a href="{{ route('asset.edit', $asset->id) }}">Edit</a>
@@ -65,6 +50,7 @@
                           </form>
                       </div>
                     </td>
+                    @endauth
                 </tr>
                 @endforeach
               </table>

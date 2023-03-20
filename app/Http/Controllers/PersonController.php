@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Person;
+use App\Http\Middleware\PublicAccessMiddleware;
+use Illuminate\Support\Facades\Auth;
 
 
 class PersonController extends Controller
 {
     public function __construct(){
-        //$this->middleware('auth', ['except' => 'index', 'show']);
-    }
-    
+        // $this->middleware('auth', ['except' => 'index', 'show']);
+
+    }    
     /**
      * Display a listing of the resource.
      */
@@ -26,6 +28,10 @@ class PersonController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
+        if(!$user){
+            return view('welcome');
+        }
         return view('person.create');
     }
 

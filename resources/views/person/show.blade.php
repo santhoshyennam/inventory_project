@@ -7,6 +7,7 @@
         <title>Person Id {{ $person->id }}</title>
     </head>
     <body>
+        @include('header')
         <h1>{{ $person->first_name }}</h1>
         <ul>
             <li>Last name: {{ $person->last_name }}</li>

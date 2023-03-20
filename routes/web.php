@@ -20,7 +20,9 @@ use App\Http\Controllers\OwnershipController;
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/about', function () {
+    return view('about');
+});
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -33,7 +35,7 @@ Route::middleware('auth')->group(function () {
 Route::resource('asset', AssetController::class);
 Route::resource('person', PersonController::class);
 Route::resource('owner', OwnershipController::class);
-Route::resource('about', OwnershipController::class);
+
 
 
 require __DIR__.'/auth.php';
