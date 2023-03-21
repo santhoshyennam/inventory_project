@@ -13,7 +13,7 @@ class Asset extends Model
         'name',
         'description',
         'value',
-        'is_purchased'
+        'purchased'
     ];
 
     public function person()

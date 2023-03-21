@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Asset;
 use App\Models\Person;
+use Illuminate\Support\Carbon;
 
 
 class OwnershipController extends Controller
@@ -39,11 +40,14 @@ class OwnershipController extends Controller
     {
 
         try {
+            if ($request->input('id') == NULL) {
+                return redirect()->back()->withErrors(['Asset' => 'Asset is required']);
+            }
             $validated = $request->validate([
                 'person_id' => 'required',
                 'id' => 'required'
             ]);
-            $new_ownership = Asset::whereId($request->input('id'))->update([ 'person_id' => $request->input('person_id')]);
+            $new_ownership = Asset::whereId($request->input('id'))->update(['person_id' => $request->input('person_id'), 'purchased' => Carbon::now()]);
             
             return redirect('/owner')->with('ownership_created', $new_ownership);
             
@@ -80,10 +84,13 @@ class OwnershipController extends Controller
     {
 
         try {
+                if ($asset_id == NULL) {
+                    return redirect()->back()->withErrors(['Asset' => 'Asset is required']);
+                }
                 $validated = $request->validate([
                     'person_id' => 'required',
                 ]);
-                $updated_ownership = Asset::whereId($asset_id)->update($validated);
+                $updated_ownership = Asset::whereId($asset_id)->update(['person_id' => $request->input('person_id'), 'purchased' => Carbon::now()]);
                 return redirect('/owner')->with('ownership_updated',$validated);
             }
             catch( Exception $e) {
@@ -97,7 +104,7 @@ class OwnershipController extends Controller
      */
     public function destroy(string $asset_id)
     {
-        $updated_ownership = Asset::whereId($asset_id)->update(['person_id' => NULL]);
+        $updated_ownership = Asset::whereId($asset_id)->update(['person_id' => NULL, 'purchased' => NULL]);
         return redirect('/owner')->with('ownership_deleted',$updated_ownership);
     }
 }

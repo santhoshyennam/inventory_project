@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name',100);
             $table->string('description',5000);
             $table->string('value',50);
-            $table->boolean('is_purchased')->default(false);
+            $table->dateTime('purchased')->default(NULL)->nullable();
             $table->timestamps();
         });
     }

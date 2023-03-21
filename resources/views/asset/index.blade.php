@@ -30,6 +30,7 @@
                   <th>name</th>
                   <th>Description</th>
                   <th>Value</th>
+                  <th> purchased date </th>
                   @auth
                   <th>actions</th>
                   @endauth
@@ -39,6 +40,11 @@
                     <td><a href="{{ route('asset.show', $asset->id) }}">{{ $asset->name }}</a></td>
                     <td>{{ $asset->description }}</td>
                     <td>{{ $asset->value }}</td>
+                    @if($asset->purchased != NULL)
+                    <td>{{ $asset->purchased }} </td>
+                    @else
+                    <td> Not purchased </td>
+                    @endif
                     @auth
                     <td>
                       <div>
