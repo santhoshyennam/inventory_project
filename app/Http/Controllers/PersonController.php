@@ -11,11 +11,10 @@ use Illuminate\Support\Facades\Auth;
 class PersonController extends Controller
 {
     public function __construct(){
-        // $this->middleware('auth', ['except' => 'index', 'show']);
-
     }    
+
     /**
-     * Display a listing of the resource.
+     * Display a listing of persons.
      */
     public function index()
     {
@@ -24,23 +23,25 @@ class PersonController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new person.
      */
     public function create()
     {
-        $user = Auth::user();
-        if(!$user){
-            return view('welcome');
+        if(!Auth::check()){
+            return view('auth.login');
         }
         return view('person.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created person in storage.
      */
     public function store(Request $request)
     {
         try {
+            if(!Auth::check()){
+                return response('Unauthorized',401);
+            }
             $validated = $request->validate([
                 'first_name' => 'required|max:100',
                 'last_name' => 'required|max:100',
@@ -58,7 +59,7 @@ class PersonController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified person.
      */
     public function show(string $person_id)
     {
@@ -75,28 +76,35 @@ class PersonController extends Controller
     */
     
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the person.
      */
     public function edit(string $person_id)
     {
+        if(!Auth::check()){
+            return view('auth.login');
+        }
         $person = person::findOrFail($person_id);
         return view('person.edit', compact('person'));     
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the person in storage.
      */
     public function update(Request $request, string $person_id)
     {
         try {
-        $validated = $request->validate([
-            'first_name' => 'required|max:100',
-            'last_name' => 'required|max:100',
-            'date_of_birth' => 'required|max:10',
-            'email' => 'required|max:50',
-        ]);
-        $updated_person = Person::whereId($person_id)->update($validated);
-        return redirect('/person')->with('person_updated',$validated);
+
+            if(!Auth::check()){
+                return response('Unauthorized',401);
+            }  
+            $validated = $request->validate([
+                'first_name' => 'required|max:100',
+                'last_name' => 'required|max:100',
+                'date_of_birth' => 'required|max:10',
+                'email' => 'required|max:50',
+            ]);
+            $updated_person = Person::whereId($person_id)->update($validated);
+            return redirect('/person')->with('person_updated',$validated);
         }
         catch( Exception $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
@@ -104,10 +112,13 @@ class PersonController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the person from storage.
      */
     public function destroy(string $person_id)
     {
+        if(!Auth::check()){
+            return response('Unauthorized',401);
+        }
         $person = Person::findOrFail($person_id);
         $person->delete();
         

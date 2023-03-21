@@ -16,6 +16,7 @@
             <li>Value: {{ $asset->value }} </li>
             {{-- <li>Date Purchased: {{ $asset->purchased }}</li> --}}
         </ul>
+        @auth
         <div class="actions">
             <a href="{{ route('asset.edit', $asset->id) }}">Edit</a>
               <form action="{{ route('asset.destroy', $asset->id) }}" method="post" style="margin-top:6px;">
@@ -24,5 +25,6 @@
                   <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Delete</a>
               </form>
           </div>
+        @endauth
     </body>
 </html>

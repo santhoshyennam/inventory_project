@@ -14,6 +14,7 @@
             <li>Email: {{ $person->email }} </li>
             <li>Date of Birth: {{ $person->date_of_birth }} </li>
         </ul>
+        @auth
         <div class="actions">
             <a href="{{ route('person.edit', $person->id) }}">Edit</a>
               <form action="{{ route('person.destroy', $person->id) }}" method="post" style="margin-top:6px;">
@@ -22,5 +23,6 @@
                   <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Delete</a>
               </form>
           </div>
+        @endauth  
     </body>
 </html>

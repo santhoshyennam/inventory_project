@@ -4,16 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Asset;
+use Illuminate\Support\Facades\Auth;
 
 
 class AssetController extends Controller
 {
     public function __construct(){
-        $this->middleware('auth', ['except' => 'index', 'show']);
     }
     
     /**
-     * Display a listing of the resource.
+     * Display a listing of Assets.
      */
     public function index()
     {
@@ -22,20 +22,26 @@ class AssetController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new Asset.
      */
     public function create()
     {
+        if(!Auth::check()){
+            return view('auth.login');
+        }
         return view('asset.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created Asset in storage.
      */
     public function store(Request $request)
     {
 
         try {
+            if(!Auth::check()){
+                return response('Unauthorized',401);
+            }
             $validated = $request->validate([
                 'name' => 'required|max:100',
                 'description' => 'required|max:255',
@@ -54,7 +60,7 @@ class AssetController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified Asset.
      */
     public function show(string $asset_id)
     {
@@ -63,21 +69,27 @@ class AssetController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified Asset.
      */
     public function edit(string $asset_id)
     {
+        if(!Auth::check()){
+            return view('auth.login');
+        }
         $asset = Asset::findOrFail($asset_id);
         return view('asset.edit', compact('asset'));   
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified Asset in storage.
      */
     public function update(Request $request, string $asset_id)
     {
 
         try {
+            if(!Auth::check()){
+                return response('Unauthorized',401);
+            }
                 $validated = $request->validate([
                     'name' => 'required|max:100',
                     'description' => 'required|max:255',
@@ -94,10 +106,13 @@ class AssetController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified Asset from storage.
      */
     public function destroy(string $asset_id)
     {
+        if(!Auth::check()){
+            return response('Unauthorized',401);
+        }
         $asset = Asset::findOrFail($asset_id);
         $asset->delete();
         
