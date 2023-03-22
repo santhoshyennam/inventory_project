@@ -24,5 +24,5 @@
 
 - If we have more logic, it would be useful to call service Class (where our logic present) inside Controller class.
 - Make api calls to other backends from laravel project (using Http library)
-- Add dependencies of other libraries and use them inside our project.
+- Add some more dependencies of other libraries and use them inside our project (we used braze in this project).
 - Writing unit tests.

@@ -7,7 +7,7 @@
 <body>
     <div class="header">
     <ul>
-  <li><a href="/about">Home</a></li>
+  <li><a href="/">Home</a></li>
   <li><a href="{{ route('person.index') }}">Persons</a></li> 
   <li><a href="{{ route('asset.index') }}">Assets</a></li> 
   <li><a href="{{ route('owner.index') }}">Ownership</a></li> 
